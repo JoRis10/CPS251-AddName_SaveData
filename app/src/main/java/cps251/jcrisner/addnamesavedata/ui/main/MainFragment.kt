@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import cps251.jcrisner.addnamesavedata.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
@@ -21,6 +20,8 @@ class MainFragment : Fragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         _binding = FragmentMainBinding.inflate(inflater, container, false)
+        binding.buttonAddName.setOnClickListener { this.addName()}
+        if(viewModel.nameList != ""){binding.nameDisplay.setText(viewModel.nameList)}
         return binding.root
     }
 
@@ -29,20 +30,12 @@ class MainFragment : Fragment() {
         _binding = null
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putCharSequence("savedList",binding.nameDisplay.text)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        binding.nameDisplay.text = savedInstanceState?.getCharSequence("savedList")
-    }
-
-    fun createList(newName: String){
-        val updatedList = viewModel.nameList + newName + "\n"
-        viewModel.setList(updatedList)
-        binding.nameDisplay.text = updatedList
+    fun addName(){
+        if(binding.enterNameBox.text.isNotEmpty()){
+            val updatedList = viewModel.nameList + binding.enterNameBox.text + "\n"
+            viewModel.setList(updatedList)
+            binding.nameDisplay.text = updatedList
+        }
     }
 
 }
